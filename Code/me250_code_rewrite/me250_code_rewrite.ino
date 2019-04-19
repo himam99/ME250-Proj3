@@ -1,31 +1,33 @@
 //initialize servo + stepper motors and color sensor
 #include <Servo.h>
+Servo servo;
 #include <Stepper.h>
 #include <Adafruit_TCS34725.h>
 Adafruit_TCS34725 tcs =Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
 //CONFIG
 
-//initialize pins
+//ALL PINS GO HERE
 int red = 13;
 int grn = 12;
 int blu = 11;
 Stepper stpr(512, 4, 6, 5, 7);
-Servo servo;
 int servopin = 9;
+//TCS: SDA -> A4, SCL -> A5. This can't be changed (unless we really wanted to but we don't)
+
 
 //initialize variables
-int stepspeed = 40;
-float sense[3]; //initialize the 3 values put out by the TCS
-int blinknum = 5; //how many times the LED will blink in case of a signal
-int servopos[] = {30, 60, 90, 120}; //locations of the bins
-char color = "none"; //initialize color to none to use as placeholder
+int stepspeed = 40;                                             //speed that the stepper operates
+float sense[3];                                                 //initialize the 3 values put out by the TCS
+int blinknum = 5;                                               //how many times the LED will blink when signalling (unless custom number used)
+int servopos[] = {30, 60, 90, 120};                             //locations of the bins
+char color = "none";                                            //initialize color to none to use as placeholder
 
 //initialize colors
 //make it easier for status updates using one of these 'default' colors
 //less bright than other colors displayed (in theory)
-int RGBwhite[] = {128, 128, 128}; //used for "done" (would pick green but it's a ball color) 
-int RGBred[] = {128, 0, 0}; //used for "not done"
+int RGBwhite[] = {128, 128, 128};     //used for "done" (would pick green but it's a ball color) 
+int RGBred[] = {128, 0, 0};           //used for "not done" or alerts or whatever
 
 
 //color thresholds + values to display as structs:
@@ -75,10 +77,6 @@ ballColor pink = {
 
 ballColor balls[5];
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//IF TESTING DO NOT CHANGE ANYTHING BELOW THIS LINE
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 //setup bins as an array of 3 structs
 //might change this to matrix/multidimensional array when im not so tired
 
@@ -86,11 +84,17 @@ struct bin_type{
   char* item[3];
 };
 
-bin_type bins[3];
+bin_type bin[3];
 
-bin_type bin = {
-  {"orange", "yellow", "green"}
+bin_type binContent = {
+  {"pink", "pink", "yellow", "blue"}
 };
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!IF TESTING DO NOT CHANGE ANYTHING BELOW THIS POINT!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 void setup() {
@@ -131,39 +135,41 @@ void setup() {
   balls[4] = pink;
 
   //Similar to above but with the bins
-  for(int i=0; i<3; i++){
-    bins[i] = bin;
+  //Use for 3 identical bins with the same content
+  for(int i=0; i<4; i++){
+    bin[i] = binContent;
   }
 }
 
 
 void loop() {
   stpr.step(683); //stepper motor rotates 120deg (IF WE DO 3 HOLES, WE WILL HAVE 0.3 DEGREE OFF FOR EACH BALL
+  delay(1500);
   
   //color sensor and its read out
   tcs.setInterrupt(false);  // turn on LED
-  delay(60);  // takes 50ms to read
+  delay(50);  // takes 50ms to read
   tcs.getRGB(&sense[0], &sense[1], &sense[2]);
   tcs.setInterrupt(true);
 
-  Serial.println(String(sense[0]) + "\t" + String(sense[1]) + "\t" + String(sense[2]));
-
   colorBlink(RGBred, 3);
 
-  for(int i = 0; i<5; i++){
-    if(checkColor(balls[i].thresh, sense) ){
-        color = balls[i].color;
-        colorBlink(balls[i].RGB, blinknum);
+  for(int i = 0; i<5; i++){                       //for every color possible
+    if(checkColor(balls[i].thresh, sense) ){      //if the sensed color is within the threshold
+        color = balls[i].color;                   //set the color string to the name of the color
+        colorBlink(balls[i].RGB, blinknum);       //blink the led with the sensed color
     }
   }
   
-  Serial.println(color);
+  Serial.println("R: " + String(sense[0]) + "\t G: " + String(sense[1]) + "\t B:" + String(sense[2])); //print the RGB values to the serial monitor
+  Serial.println(color);                          //print the sensed color to the serial monitor
 
-  for(int i = 0; i<3; i++){
-    for(int j = 0; i<3; i++){
-      if(bins[i].item[j] == color){
-        servo.write(servopos[i]);
-        break;
+  for(int i = 0; i<3; i++){                       //for each bin (3 total)
+    for(int j = 0; i<3; i++){                     //for each color desired in the bin (3 total)
+      if(bin[i].item[j] == color){                //if the sensed ball matches one of the colors
+        servo.write(servopos[i]);                 //move the servo to the bin
+        bin[i].item[j] = "";                      //"cross off" the ball that was guided by changing the array value to null
+        break;                                    //exit the for loop 
       }
     }
   }
