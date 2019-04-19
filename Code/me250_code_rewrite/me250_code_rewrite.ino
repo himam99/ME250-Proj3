@@ -19,6 +19,13 @@ int stepspeed = 40;
 float sense[3]; //initialize the 3 values put out by the TCS
 int blinknum = 5; //how many times the LED will blink in case of a signal
 int servopos[] = {30, 60, 90, 120}; //locations of the bins
+char color = "none"; //initialize color to none to use as placeholder
+
+//initialize colors
+//make it easier for status updates using one of these 'default' colors
+//less bright than other colors displayed (in theory)
+int RGBwhite[] = {128, 128, 128}; //used for "done" (would pick green but it's a ball color) 
+int RGBred[] = {128, 0, 0}; //used for "not done"
 
 
 //color thresholds + values to display as structs:
@@ -27,7 +34,7 @@ int servopos[] = {30, 60, 90, 120}; //locations of the bins
 //row 3: array {red, grn, blue} color to send to rgbled
 
 struct ballColor{
-  String color;
+  char color;
   int thresh[6];
   int RGB[3];
 } ;
@@ -72,6 +79,19 @@ ballColor balls[5];
 //IF TESTING DO NOT CHANGE ANYTHING BELOW THIS LINE
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+//setup bins as an array of 3 structs
+//might change this to matrix/multidimensional array when im not so tired
+
+struct bin_type{
+  char* item[3];
+};
+
+bin_type bins[3];
+
+bin_type bin = {
+  {"orange", "yellow", "green"}
+};
+
 
 void setup() {
 
@@ -109,7 +129,11 @@ void setup() {
   balls[2] = green;
   balls[3] = blue;
   balls[4] = pink;
- 
+
+  //Similar to above but with the bins
+  for(int i=0; i<3; i++){
+    bins[i] = bin;
+  }
 }
 
 
@@ -124,12 +148,25 @@ void loop() {
 
   Serial.println(String(sense[0]) + "\t" + String(sense[1]) + "\t" + String(sense[2]));
 
+  colorBlink(RGBred, 3);
+
   for(int i = 0; i<5; i++){
-      if(checkColor(balls[i].thresh, sense) ){
-        Serial.println(balls[i].color);
-      }
- }
+    if(checkColor(balls[i].thresh, sense) ){
+        color = balls[i].color;
+        colorBlink(balls[i].RGB, blinknum);
+    }
+  }
   
+  Serial.println(color);
+
+  for(int i = 0; i<3; i++){
+    for(int j = 0; i<3; i++){
+      if(bins[i].item[j] == color){
+        servo.write(servopos[i]);
+        break;
+      }
+    }
+  }
 
 }
 
@@ -145,7 +182,6 @@ void colorBlink(int list[], int n){
   delay(250);
   n -= 1;
   }
-
 }
 
 int checkColor(int colorList[], float sensedList[]){
