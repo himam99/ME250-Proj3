@@ -8,10 +8,16 @@ void setup() {
    Serial.println("Found sensor");
  } else {
    Serial.println("No TCS34725 found ... check your connections");
-   whil
+   while (1); // halt!
+ }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+ float r, g, b;
+ tcs.setInterrupt(false);  // turn on LED
+ delay(60);  // takes 50ms to read but we don't need it anymore
+ tcs.getRGB(&r, &g, &b);
+ tcs.setInterrupt(true);
 
+ Serial.println(String(r) + "\t" + String(g) + "\t" + String(b));
 }
