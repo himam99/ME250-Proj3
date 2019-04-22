@@ -29,6 +29,7 @@ int ballsLeft = 12;                                       //this counts how many
 //less bright than other colors displayed (in theory)
 int RGBwhite[] = {128, 128, 128};     //used for "done" (would pick green but it's a ball color) 
 int RGBred[] = {128, 0, 0};           //used for "not done" or alerts or whatever
+int RGBoff[] = {0, 0, 0,};            //used for turning the led off 
 
 
 //color thresholds + values to display as structs:
@@ -41,10 +42,6 @@ struct ballColor{
   int thresh[6];
   int RGB[3];
 } ;
-
-struct ballList{
-  ballColor balls;
-};
 
 ballColor orange = {
   "orange",
@@ -109,6 +106,13 @@ void setup() {
   //initialize DC motor
   stpr.setSpeed(stepspeed);
 
+  //initialize pinouts
+  pinMode (red, OUTPUT);
+  pinMode (blu, OUTPUT);
+  pinMode (grn, OUTPUT);
+  pinMode (A4, INPUT);
+  pinMode (A5, INPUT);
+
   //for color sensor
   if (tcs.begin()) {
     Serial.println("Found sensor");} 
@@ -117,12 +121,6 @@ void setup() {
     while (1); // halt!
   }
 
-  //initialize pinouts
-  pinMode (red, OUTPUT);
-  pinMode (blu, OUTPUT);
-  pinMode (grn, OUTPUT);
-  pinMode (A4, INPUT);
-  pinMode (A5, INPUT);
 
   //Create an array of structs called "balls" from the previously generated structs.
   //I'm aware this is a bit redundant, but it helps keep the user defined variables
@@ -136,7 +134,7 @@ void setup() {
 
   //Similar to above but with the bins
   //Use for 3 identical bins with the same content
-  for(int i=0; i<4; i++){
+  for(int i=0; i<3; i++){
     bin[i] = binContent;
   }
 }
@@ -153,16 +151,22 @@ void loop() {
 
   colorBlink(RGBred, 3);
 
+  //check color of the ball
   for(int i = 0; i<5; i++){                       //for every color possible
     if(checkColor(balls[i].thresh, sense) ){      //if the sensed color is within the threshold
         color = balls[i].color;                   //set the color string to the name of the color
         colorBlink(balls[i].RGB, blinknum);       //blink the led with the sensed color
     }
+    else{
+      color = "none";
+    }
   }
-  
+
+  //print to serial monitor
   Serial.println("R: " + String(sense[0]) + "\t G: " + String(sense[1]) + "\t B:" + String(sense[2])); //print the RGB values to the serial monitor
   Serial.println(color);                          //print the sensed color to the serial monitor
 
+  //routing the ball
   for(int i = 0; i<3; i++){                       //for each bin (3 total)
     for(int j = 0; i<3; i++){                     //for each color desired in the bin (3 total)
       if(bin[i].item[j] == color){                //if the sensed ball matches one of the colors
@@ -176,7 +180,6 @@ void loop() {
       }
     }
   }
-
 }
 
 void colorWrite(int list[]){
@@ -189,7 +192,9 @@ void colorBlink(int list[], int n){
   while(n>0){
     colorWrite(list);
     delay(250);
-    n -= 1;
+    colorWrite(RGBoff);
+    delay(250);
+    n--;
   }
 }
 
