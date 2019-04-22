@@ -17,11 +17,12 @@ int servopin = 9;
 
 
 //initialize variables
-int stepspeed = 40;                                             //speed that the stepper operates
-float sense[3];                                                 //initialize the 3 values put out by the TCS
-int blinknum = 5;                                               //how many times the LED will blink when signalling (unless custom number used)
-int servopos[] = {30, 60, 90, 120};                             //locations of the bins
-char color = "none";                                            //initialize color to none to use as placeholder
+int stepspeed = 40;                                       //speed that the stepper operates
+float sense[3];                                           //initialize the 3 values put out by the TCS
+int blinknum = 5;                                         //how many times the LED will blink when signalling (unless custom number used)
+int servopos[] = {35, 70, 105, 140};                      //locations of the bins
+char color = "none";                                      //initialize color to none to use as placeholder
+int ballsLeft = 12;                                       //this counts how many balls need to be processed, should be 0 when all balls are done
 
 //initialize colors
 //make it easier for status updates using one of these 'default' colors
@@ -98,7 +99,6 @@ bin_type binContent = {
 
 
 void setup() {
-
   //initialize serial line
   Serial.begin(9600);
   
@@ -141,7 +141,6 @@ void setup() {
   }
 }
 
-
 void loop() {
   stpr.step(683); //stepper motor rotates 120deg (IF WE DO 3 HOLES, WE WILL HAVE 0.3 DEGREE OFF FOR EACH BALL
   delay(1500);
@@ -169,7 +168,11 @@ void loop() {
       if(bin[i].item[j] == color){                //if the sensed ball matches one of the colors
         servo.write(servopos[i]);                 //move the servo to the bin
         bin[i].item[j] = "";                      //"cross off" the ball that was guided by changing the array value to null
+        ballsLeft--;                              //reduce number of balls left by 1
         break;                                    //exit the for loop 
+      }
+      else{
+        servo.write(servopos[3]);
       }
     }
   }
@@ -184,20 +187,23 @@ void colorWrite(int list[]){
 
 void colorBlink(int list[], int n){
   while(n>0){
-  colorWrite(list);
-  delay(250);
-  n -= 1;
+    colorWrite(list);
+    delay(250);
+    n -= 1;
   }
 }
 
 int checkColor(int colorList[], float sensedList[]){
   int sum = 0;
-  for(int i=0; i<3; i++){
-    if(colorList[(2*i)] <= sensedList[i] && sensedList[i] <= colorList[(2*i + 1)]){
-      sum++;
+    for(int i=0; i<3; i++){
+      if(colorList[(2*i)] <= sensedList[i] && sensedList[i] <= colorList[(2*i + 1)]){
+        sum++;
     }
   }
   if(sum = 3){
     return true;
+  }
+  else{
+    return false; 
   }
 }
