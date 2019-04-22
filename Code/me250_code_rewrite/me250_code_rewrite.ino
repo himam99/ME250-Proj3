@@ -8,12 +8,12 @@ Adafruit_TCS34725 tcs =Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725
 //CONFIG
 
 //ALL PINS GO HERE
-int red = 13;
-int grn = 12;
-int blu = 11;
-Stepper stpr(512, 4, 6, 5, 7);
-int servopin = 9;
-//TCS: SDA -> A4, SCL -> A5. This can't be changed (unless we really wanted to but we don't)
+int red = 11;
+int grn = 10;
+int blu = 9;
+Stepper stpr(512, A0, A1, A2, A3);
+int servopin = 3;
+//TCS: SDA -> A4, SCL -> A5.  This can't be changed (unless we really wanted to but we don't)
 
 
 //initialize variables
@@ -76,8 +76,6 @@ ballColor pink = {
 ballColor balls[5];
 
 //setup bins as an array of 3 structs
-//might change this to matrix/multidimensional array when im not so tired
-
 struct bin_type{
   char* item[3];
 };
@@ -140,22 +138,23 @@ void setup() {
 }
 
 void loop() {
-  stpr.step(683); //stepper motor rotates 120deg (IF WE DO 3 HOLES, WE WILL HAVE 0.3 DEGREE OFF FOR EACH BALL
-  delay(1500);
+  stpr.step(683);           //stepper motor rotates 120deg (IF WE DO 3 HOLES, WE WILL HAVE 0.3 DEGREE OFF FOR EACH BALL
+  delay(1500);              //waits 1.5 seconds just to give shit time to work
   
   //color sensor and its read out
-  tcs.setInterrupt(false);  // turn on LED
-  delay(50);  // takes 50ms to read
-  tcs.getRGB(&sense[0], &sense[1], &sense[2]);
-  tcs.setInterrupt(true);
+  tcs.setInterrupt(false);                        //turn on LED
+  delay(50);                                      //takes 50ms to read
+  tcs.getRGB(&sense[0], &sense[1], &sense[2]);    //assign the read values to the array sense[]
+  tcs.setInterrupt(true);                         //
 
-  colorBlink(RGBred, 3);
+  colorBlink(RGBred, 3);`
 
   //check color of the ball
   for(int i = 0; i<5; i++){                       //for every color possible
     if(checkColor(balls[i].thresh, sense) ){      //if the sensed color is within the threshold
         color = balls[i].color;                   //set the color string to the name of the color
         colorBlink(balls[i].RGB, blinknum);       //blink the led with the sensed color
+        break;                                    //exit the for loop if one is found
     }
     else{
       color = "none";
@@ -167,21 +166,23 @@ void loop() {
   Serial.println(color);                          //print the sensed color to the serial monitor
 
   //routing the ball
-  for(int i = 0; i<3; i++){                       //for each bin (3 total)
-    for(int j = 0; i<3; i++){                     //for each color desired in the bin (3 total)
+  for(int i = 0; i<3; i++){                   //for each bin (3 total)
+    for(int j = 0; i<3; i++){                   //for each color desired in the bin (3 total)
       if(bin[i].item[j] == color){                //if the sensed ball matches one of the colors
-        servo.write(servopos[i]);                 //move the servo to the bin
-        bin[i].item[j] = "";                      //"cross off" the ball that was guided by changing the array value to null
-        ballsLeft--;                              //reduce number of balls left by 1
-        break;                                    //exit the for loop 
+        servo.write(servopos[i]);                   //move the servo to the bin
+        bin[i].item[j] = "";                        //"cross off" the ball that was guided by changing the array value to null
+        ballsLeft--;                                //reduce number of balls left by 1
+        break;
+        break;                                      //exit both for loops 
       }
-      else{
-        servo.write(servopos[3]);
+      else{                                       //else (if the sensed ball does NOT match a color in the list)
+        servo.write(servopos[3]);                   //move the servo to the trash bin
       }
     }
   }
 }
 
+//function to write the color to a 
 void colorWrite(int list[]){
   analogWrite(red, list[0]);
   analogWrite(grn, list[1]);

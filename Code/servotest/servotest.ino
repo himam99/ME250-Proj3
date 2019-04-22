@@ -9,17 +9,18 @@ void setup() {
   //initialize servo motor
   servo.attach(9);
 
-  servo.write(35);
-  delay(2000);
-  servo.write(70);
-  delay(2000);
-  servo.write(105);
-  delay(2000);
-  servo.write(140);
-  delay(2000);
-  servo.write(100);
-
-  
+  servo.write(120);
+  /*Serial.println("Bin #1");
+  delay(5000);
+  servo.write(45);
+  Serial.println("Bin #2");
+  delay(5000);
+  servo.write(60);
+  Serial.println("Bin #3");
+  delay(5000);
+  servo.write(95);
+  Serial.println("Trash");
+  */
 }
 
 void loop() {
