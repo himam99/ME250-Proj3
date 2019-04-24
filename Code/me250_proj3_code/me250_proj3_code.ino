@@ -21,14 +21,14 @@ int stepspeed = 40;                                       //speed that the stepp
 float sense[3];                                           //initialize the 3 values put out by the TCS
 int blinknum = 5;                                         //how many times the LED will blink when signalling (unless custom number used)
 int servopos[] = {35, 70, 105, 140};                      //locations of the bins
-char color = "none";                                      //initialize color to none to use as placeholder
+char color[6] = "none  ";                                      //initialize color to none to use as placeholder
 int ballsLeft = 12;                                       //this counts how many balls need to be processed, should be 0 when all balls are done
 
 //initialize colors
 //make it easier for status updates using one of these 'default' colors
 //less bright than other colors displayed (in theory)
 int RGBwhite[] = {128, 128, 128};     //used for "done" (would pick green but it's a ball color) 
-int RGBred[] = {128, 0, 0};           //used for "not done" or alerts or whatever
+int RGBred[] = {0, 0, 128};           //used for "not done" or alerts or whatever
 int RGBoff[] = {0, 0, 0,};            //used for turning the led off 
 
 
@@ -38,37 +38,37 @@ int RGBoff[] = {0, 0, 0,};            //used for turning the led off
 //row 3: array {red, grn, blue} color to send to rgbled
 
 struct ballColor{
-  char color;
+  char color[6];
   int thresh[6];
   int RGB[3];
 } ;
 
 ballColor orange = {
   "orange",
-  {139, 149, 52, 62, 36, 46},
-  {0, 255, 255}
+  {105, 125, 60, 80, 50, 70},
+  {255, 165, 0}
 };
 
 ballColor yellow = {
   "yellow",
   {58,68,106,116,55,65},
-  {0, 255, 255}
+  {200, 255, 0}
 };
 
 ballColor green = {
-  "green",
+  "green ",
   {48, 58, 111, 121, 63, 73},
   {0, 255, 0}
 };
 
 ballColor blue = {
-  "blue",
+  "blue  ",
   {41, 51, 90, 100, 95, 105},
   {0, 255, 255}
 };
 
 ballColor pink = {
-  "pink",
+  "pink  ",
   {150, 160, 42, 52, 41, 71},
   {170, 0, 255}
 };
@@ -150,20 +150,23 @@ void loop() {
   colorBlink(RGBred, 3);
 
   //check color of the ball
-  for(int i = 0; i<5; i++){                       //for every color possible
-    if(checkColor(balls[i].thresh, sense) ){      //if the sensed color is within the threshold
-        color = balls[i].color;                   //set the color string to the name of the color
-        colorBlink(balls[i].RGB, blinknum);       //blink the led with the sensed color
-        break;                                    //exit the for loop if one is found
+  for(int i=0; i<5; i++){                       //for every color possible
+    checkColor(balls[i].thresh, sense);
+    /*if( a ){      //if the sensed color is within the threshold
+        color[6] = balls[i].color;                  //set the color string to the name of the color
+        Serial.println(String(color[6]));
+        colorBlink(balls[i].RGB, 3);         //blink the led with the sensed color
+        break;                                      //exit the for loop if one is found
     }
-    else{
-      color = "none";
-    }
+   else{
+      color[6] = "none ";
+      colorBlink(RGBwhite, 3);
+    }*/
   }
 
   //print to serial monitor
   Serial.println("R: " + String(sense[0]) + "\t G: " + String(sense[1]) + "\t B:" + String(sense[2])); //print the RGB values to the serial monitor
-  Serial.println(String(color));                          //print the sensed color to the serial monitor
+  Serial.println(String(color[6]));                          //print the sensed color to the serial monitor
 
   //routing the ball
   for(int i = 0; i<3; i++){                   //for each bin (3 total)
@@ -202,6 +205,9 @@ void colorBlink(int list[], int n){
 int checkColor(int colorList[], float sensedList[]){
   int sum = 0;
     for(int i=0; i<3; i++){
+      Serial.println(String(colorList[(2*i)]) + "\t" + String(colorList[(2*i +1)]) + "\t" + String(sensedList[i]) 
+      + "\t" + String((colorList[(2*i)] <= sensedList[i] && sensedList[i] <= colorList[(2*i + 1)])));
+      Serial.println();
       if(colorList[(2*i)] <= sensedList[i] && sensedList[i] <= colorList[(2*i + 1)]){
         sum++;
     }
