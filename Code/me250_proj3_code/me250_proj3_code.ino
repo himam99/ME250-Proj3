@@ -77,10 +77,10 @@ ballColor balls[5];
 
 //setup bins as an array of 3 structs
 struct bin_type{
-  char* item[3];
+  char* item[4];
 };
 
-bin_type bin[3];
+bin_type bin[4];
 
 bin_type binContent = {
   {"pink", "pink", "yellow", "blue"}
