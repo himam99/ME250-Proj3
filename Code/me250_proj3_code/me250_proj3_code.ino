@@ -9,10 +9,10 @@ Adafruit_TCS34725 tcs =Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725
 
 //ALL PINS GO HERE
 int red = 11;
-int grn = 10;
+int grn = 10;                         //pins for RGBLED
 int blu = 9;
-Stepper stpr(512, A0, A1, A2, A3);
-int servopin = 3;
+Stepper stpr(512, A0, A1, A2, A3);    //stepper pins (IN1 to IN4 in order)
+int servopin = 3;                     //servo pin
 //TCS: SDA -> A4, SCL -> A5.  This can't be changed (unless we really wanted to but we don't)
 
 
