@@ -147,7 +147,7 @@ void loop() {
   tcs.getRGB(&sense[0], &sense[1], &sense[2]);    //assign the read values to the array sense[]
   tcs.setInterrupt(true);                         //
 
-  colorBlink(RGBred, 3);`
+  colorBlink(RGBred, 3);
 
   //check color of the ball
   for(int i = 0; i<5; i++){                       //for every color possible
@@ -163,7 +163,7 @@ void loop() {
 
   //print to serial monitor
   Serial.println("R: " + String(sense[0]) + "\t G: " + String(sense[1]) + "\t B:" + String(sense[2])); //print the RGB values to the serial monitor
-  Serial.println(color);                          //print the sensed color to the serial monitor
+  Serial.println(String(color));                          //print the sensed color to the serial monitor
 
   //routing the ball
   for(int i = 0; i<3; i++){                   //for each bin (3 total)
