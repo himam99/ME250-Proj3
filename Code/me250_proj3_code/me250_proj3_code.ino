@@ -155,9 +155,10 @@ void loop() {
 
   //check color of the ball
   for(int i=0; i<5; i++){                             //for every color possible
-    //Serial.println(balls[i].colorName);                 //display the color being checked to the serial monitor
-    if( (checkColor(balls[i].color, sense)) ){       //if the sensed color matches a ball (see below for details on checkColor function)
-        color = balls[i].colorName;                       //set the color string to the name of the color
+    Serial.println(balls[i].colorName);               //display the color being checked to the serial monitor
+    if( (checkColor(balls[i].color, sense)) ){        //if the sensed color matches a ball (see below for details on checkColor function)
+        Serial.println("Ball found!");                //display that a ball was found
+        color = balls[i].colorName;                   //set the color string to the name of the color
         colorBlink(balls[i].RGB, 3);                  //blink the led with the sensed color
         ballsTotal--;                                 //subtract one from the total number of balls
         break;                                        //exit the for loop 
@@ -194,6 +195,8 @@ void loop() {
     Serial.println("Servo set to trash");       //display that the servo has been moved to the trash
     return;                                     //exit
   }();
+
+  Serial.println("Balls left in hopper: " + String(ballsTotal));  //display how many balls are left in the hopper
 
   if( (ballsToSort + ballsTotal) == 0){         //if all balls have been sorted and there are no balls 
     Serial.println("\n\nDone.");                //print that the sorting is done
