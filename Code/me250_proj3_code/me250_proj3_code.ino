@@ -112,7 +112,7 @@ void setup() {
   //initialize DC motor
   stpr.setSpeed(stepspeed);       //set the speed of the stepper rotation
 
-  //initialize pin
+  //initialize pins
   pinMode (red, OUTPUT);
   pinMode (blu, OUTPUT);
   pinMode (grn, OUTPUT);
@@ -192,13 +192,13 @@ void loop() {
                                                 //"if" nothing has been found in the for loops
     servo.write(servopos[3]);                   //move the servo to the trash bin
     Serial.println("Servo set to trash");       //display that the servo has been moved to the trash
-    return;                                     //loop back
+    return;                                     //exit
   }();
 
   if( (ballsToSort + ballsTotal) == 0){         //if all balls have been sorted and there are no balls 
     Serial.println("\n\nDone.");                //print that the sorting is done
     colorWrite(RGBwhite);                       //turn the LED white
-    while(1);                                   //stop the code
+    while(1);                                   //stop running
   }
 }
 
