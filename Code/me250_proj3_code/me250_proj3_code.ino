@@ -205,7 +205,13 @@ void loop() {
   }
 }
 
-//FUNCTIONS USED IN CODE ABOVE 
+/*
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$FUNCTIONS USED IN CODE ABOVE$$$$$$$$$$ 
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$DO NOT CHANGE THESE$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+*/
 
 //function to write the color from a list to a RGBLED
 void colorWrite(int list[]){    //takes a list of 3 values to write to LED
