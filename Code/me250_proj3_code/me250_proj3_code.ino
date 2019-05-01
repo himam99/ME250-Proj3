@@ -141,7 +141,7 @@ void setup() {
 }
 
 void loop() {
-  if( (ballsToSort%3) == 0){                          //finds modulo 3 of balls to sort (possibilities are 0, 1, or 2)
+  if( (ballsTotal%3) == 0){                          //finds modulo 3 of balls to sort (possibilities are 0, 1, or 2)
       stpr.step(682);                                 //if it's 0, rotate by 120 deg (rounded down)
   }                                                   
   else{
@@ -273,4 +273,3 @@ $$ | $/  $$ |$$       |      $$       |$$    $$/ $$   $$$/
 $$/      $$/ $$$$$$$$/       $$$$$$$$/  $$$$$$/   $$$$$$/  
                                                                                                                                                                                                                                                                 
  */
-
