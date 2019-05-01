@@ -15,7 +15,7 @@ Adafruit_TCS34725 tcs =Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725
 int red = 11;                         //
 int grn = 10;                         //pins for RGBLED
 int blu = 9;                          //
-Stepper stpr(512, A0, A1, A2, A3);    //stepper pins (IN1 to IN4 in order)
+Stepper stpr(512, A0, A2, A1, A3);    //in the order in1, 3, 2, 4
 int servopin = 3;                     //servo pin
 //TCS: SDA -> A4, SCL -> A5.  This can't be changed (unless we really wanted to but we don't)
 
@@ -32,8 +32,8 @@ int range = 10;                                           //range from "centerpo
 //initialize colors
 //make it easier for status updates using one of these 'default' colors
 //less bright than other colors displayed (in theory)
-int RGBwhite[] = {128, 128, 128};     //used for "done" (would pick green but it's a ball color) 
-int RGBred[] = {0, 0, 128};           //used for "not done" or alerts or whatever
+int RGBwhite[] = {255, 255, 255};     //used for "done" (would pick green but it's a ball color) 
+int RGBred[] = {255, 0, 0};           //used for "not done" or alerts or whatever
 int RGBoff[] = {0, 0, 0,};            //used for turning the led off 
 
 
@@ -51,13 +51,13 @@ struct ballColor{
 ballColor orange = {
   "orange",
   {105, 80, 60},
-  {255, 165, 0}
+  {255, 200, 0}
 };
 
 ballColor yellow = {
   "yellow",
-  {65, 105, 70},
-  {200, 255, 0}
+  {75, 90, 75},
+  {165, 255, 0}
 };
 
 ballColor green = {
@@ -75,7 +75,7 @@ ballColor blue = {
 ballColor pink = {
   "pink",
   {120, 60, 60},
-  {170, 0, 255}
+  {200, 0, 255}
 };
 
 //create struct array "balls" with 5 elements (filled in later)
@@ -141,9 +141,14 @@ void setup() {
 }
 
 void loop() {
-  stpr.step(683);                                     //stepper motor rotates 120deg (IF WE DO 3 HOLES, WE WILL HAVE 0.3 DEGREE OFF FOR EACH BALL
+  if( (ballsToSort%3) == 0){                          //finds modulo 3 of balls to sort (possibilities are 0, 1, or 2)
+      stpr.step(682);                                 //if it's 0, rotate by 120 deg (rounded down)
+  }                                                   
+  else{
+    stpr.step(683);                                   //otherwise rotate by 120 deg (rounded up)
+  }                                                   //this part makes sure that it stays 360 deg every time without drifting
+
   Serial.println("\n\nRotating wheel.");              //write to the serial monitor that the wheel is rotating
-  delay(wheeldelay);                                  //waits a few seconds to give everything time to get adjusted
   
   //color sensor and its read out
   tcs.setInterrupt(false);                            //turn on LED for TCS
@@ -151,7 +156,7 @@ void loop() {
   tcs.getRGB(&sense[0], &sense[1], &sense[2]);        //assign the read values to the array sense[]
   tcs.setInterrupt(true);                       
 
-  colorBlink(RGBred, 3);                              //blink the led 
+  colorBlink(RGBred, 3);                              //blink the led to show that the scan is starting
 
   //check color of the ball
   for(int i=0; i<5; i++){                             //for every color possible
@@ -268,3 +273,4 @@ $$ | $/  $$ |$$       |      $$       |$$    $$/ $$   $$$/
 $$/      $$/ $$$$$$$$/       $$$$$$$$/  $$$$$$/   $$$$$$/  
                                                                                                                                                                                                                                                                 
  */
+
