@@ -23,11 +23,12 @@ int servopin = 3;                     //servo pin
 int stepspeed = 40;                                       //speed that the stepper operates
 int wheeldelay = 1500;                                    //time after the wheel rotates that the code is delayed
 float sense[3];                                           //initialize an array to store the 3 values put out by the TCS
-int servopos[] = {35, 70, 105, 140};                      //locations of the bins in degrees
+int servopos[] = {30, 65, 100, 135};                      //locations of the bins in degrees
 String color = "none";                                    //initialize color to none to use as placeholder
 int ballsTotal = 17;                                      //total balls to be sorted (used to make sure no balls get left in hopper/device)  
 int ballsToSort = 12;                                     //this counts how many balls need to be processed, should be 0 when all balls are done
 int range = 10;                                           //range from "centerpoint" defined in struct that a ball's RGB can be
+
 
 //initialize colors
 //make it easier for status updates using one of these 'default' colors
@@ -164,6 +165,7 @@ void loop() {
     if( (checkColor(balls[i].color, sense)) ){        //if the sensed color matches a ball (see below for details on checkColor function)
         Serial.println("Ball found!");                //display that a ball was found
         color = balls[i].colorName;                   //set the color string to the name of the color
+        colorBlink(RGBwhite, 1);                      //blink the led white once
         colorBlink(balls[i].RGB, 3);                  //blink the led with the sensed color
         ballsTotal--;                                 //subtract one from the total number of balls
         break;                                        //exit the for loop 
@@ -251,6 +253,7 @@ int checkColor(int colorList[], float sensedList[]){    //takes a list of what c
     return false;                                       //return false
   }
 }
+
 
 /*
  ________                                         __    ________ 
