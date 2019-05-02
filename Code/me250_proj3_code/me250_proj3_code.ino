@@ -23,7 +23,7 @@ int servopin = 3;                     //servo pin
 int stepspeed = 40;                                       //speed that the stepper operates
 int wheeldelay = 1500;                                    //time after the wheel rotates that the code is delayed
 float sense[3];                                           //initialize an array to store the 3 values put out by the TCS
-int servopos[] = {30, 65, 100, 135};                      //locations of the bins in degrees
+int servopos[] = {50, 75, 100, 125};                      //locations of the bins in degrees
 String color = "none";                                    //initialize color to none to use as placeholder
 int ballsTotal = 17;                                      //total balls to be sorted (used to make sure no balls get left in hopper/device)  
 int ballsToSort = 12;                                     //this counts how many balls need to be processed, should be 0 when all balls are done
@@ -205,7 +205,7 @@ void loop() {
 
   Serial.println("Balls left in hopper: " + String(ballsTotal));  //display how many balls are left in the hopper
 
-  if( (ballsToSort + ballsTotal) == 0){         //if all balls have been sorted and there are no balls 
+  if( (ballsToSort==0) && (ballsTotal == 0)){         //if all balls have been sorted and there are no balls 
     Serial.println("\n\nDone.");                //print that the sorting is done
     colorWrite(RGBwhite);                       //turn the LED white
     while(1);                                   //stop running
