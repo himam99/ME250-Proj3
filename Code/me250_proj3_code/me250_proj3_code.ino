@@ -1,6 +1,6 @@
-//Group 17
 //ME 250 Spring 2019
 //Project 3: Color Sorter
+// Hammad Imam/Group 17
 
 //initialize servo + stepper motors and color sensor
 #include <Servo.h>
