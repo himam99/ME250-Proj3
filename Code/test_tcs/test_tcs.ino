@@ -19,5 +19,6 @@ void loop() {
  tcs.getRGB(&r, &g, &b);
  tcs.setInterrupt(true);
 
- Serial.println(String(r) + "\t" + String(g) + "\t" + String(b));
+ Serial.println("\n\n\n" + String(r) + "\t" + String(g) + "\t" + String(b));
+ delay(1000);
 }

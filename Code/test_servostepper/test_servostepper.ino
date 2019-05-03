@@ -7,7 +7,7 @@ Stepper stpr(512, A0, A2, A1, A3); //in the order in1, 3, 2, 4
 int servopin = 3;
 int n = 0;
 
-int servopos[] = {50, 75, 100, 125};                      //locations of the bins in degrees
+int servopos[] = {40, 65, 80, 100};                      //locations of the bins in degrees
 
 void setup() {
   Serial.begin(9600);
@@ -19,22 +19,22 @@ void setup() {
 
 void loop() {
 
+  n=0;
   
   while(n<4){
+    
     Serial.println("Rotating stepper...");
     stpr.step(683);
 
+    delay(4000);
     Serial.println("Setting servo to position " + String(n) + "...");
     servo.write(servopos[n]);
-    delay(2500);
+
     n++;
   }
 
-  n=5;
+  //servo.write(servopos[0]);
   
 
-  servo.write(servopos[0]);
-
-  
 
 }

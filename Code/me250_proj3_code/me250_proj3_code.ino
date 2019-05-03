@@ -22,11 +22,11 @@ int servopin = 3;                     //servo pin
 int stepspeed = 40;                                       //speed that the stepper operates
 int wheeldelay = 1500;                                    //time after the wheel rotates that the code is delayed
 float sense[3];                                           //initialize an array to store the 3 values put out by the TCS
-int servopos[] = {50, 75, 100, 125};                      //locations of the bins in degrees
+int servopos[] = {40, 60, 80, 100};                     //locations of the bins in degrees
 String color = "none";                                    //initialize color to none to use as placeholder
 int ballsTotal = 17;                                      //total balls to be sorted (used to make sure no balls get left in hopper/device)  
 int ballsToSort = 12;                                     //this counts how many balls need to be processed, should be 0 when all balls are done
-int range = 10;                                           //range from "centerpoint" defined in struct that a ball's RGB can be
+int range = 5;                                           //range from "centerpoint" defined in struct that a ball's RGB can be
 
 //initialize colors
 //make it easier for status updates using one of these 'default' colors
@@ -47,35 +47,36 @@ struct ballColor{
 } ;
 
 //assign values to structs for each ball color
-ballColor orange = {
-  "orange",
-  {105, 80, 60},
-  {255, 200, 0}
-};
-
 ballColor yellow = {
   "yellow",
-  {75, 90, 75},
+  {77, 101, 61},
   {165, 255, 0}
-};
-
-ballColor green = {
-  "green",
-  {70, 90, 70},
-  {0, 255, 0}
 };
 
 ballColor blue = {
   "blue",
-  {55, 95, 90},
+  {71, 91, 81},
   {0, 255, 255}
 };
 
 ballColor pink = {
   "pink",
-  {120, 60, 60},
+  {114, 74, 55},
   {200, 0, 255}
 };
+
+ballColor orange = {
+  "orange",
+  {127, 67, 51,},
+  {255, 200, 0}
+};
+
+ballColor green = {
+  "green",
+  {76, 97, 70},
+  {0, 255, 0}
+};
+
 
 //create struct array "balls" with 5 elements (filled in later)
 ballColor balls[5];
@@ -121,11 +122,11 @@ void setup() {
   
   //Create an array of structs called "balls" from the previously generated structs.
   //Used so that balls can be checed using nested for loops instead of being searched one by one
-  balls[0] = orange;
-  balls[1] = yellow;
-  balls[2] = green;
-  balls[3] = blue;
-  balls[4] = pink;
+  balls[0] = yellow;
+  balls[1] = blue;
+  balls[2] = pink;
+  balls[3] = orange;
+  balls[4] = green;
 
   //Writes all 3 elements of the bin[] array to the same contents
   for(int i=0; i<3; i++){
@@ -202,6 +203,8 @@ void loop() {
   }
 }
 
+//FUNCTIONS USED IN CODE ABOVE 
+
 //function to write the color from a list to a RGBLED
 void colorWrite(int list[]){    //takes a list of 3 values to write to LED
   analogWrite(red, list[0]);
@@ -221,11 +224,11 @@ void colorBlink(int list[], int n){   //takes a list of 3 values to write to LED
 }
 
 //function to check the color of a ball
-int checkColor(int colorList[], float sensedList[]){    //takes a list of what colors should be sensed and a list of what colors are sensed
-  int sum = 0;                                          ///for each of 3 colors
-    if( abs(colorList[i]-sensedList[i]) < range ) {     //if the "should be" color is within range of the "sensed" color
-        sum++;                                       initialize a sum to 0    
-  for(int i=0; i<3; i++){                               /   //add one to the sum
+int checkColor(int colorList[], float sensedList[]){        //takes a list of what colors should be sensed and a list of what colors are sensed
+  int sum = 0;                                              //initialize a sum to 0   
+  for(int i=0; i<3; i++){                                   //for each of 3 colors
+        if( abs(colorList[i]-sensedList[i]) < range ) {     //if the "should be" color is within range of the "sensed" color
+        sum++;                                              //add one to the sum
     }
   }
   if(sum == 3){                                         //if the sum is 3 (true for all 3 of RGB)
