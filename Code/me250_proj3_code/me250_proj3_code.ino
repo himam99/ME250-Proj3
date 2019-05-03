@@ -202,6 +202,11 @@ void loop() {
   }
 }
 
+<<<<<<< HEAD
+=======
+//FUNCTIONS USED IN CODE ABOVE 
+
+>>>>>>> parent of b5b4068... minor changes to CAD and code
 //function to write the color from a list to a RGBLED
 void colorWrite(int list[]){    //takes a list of 3 values to write to LED
   analogWrite(red, list[0]);
