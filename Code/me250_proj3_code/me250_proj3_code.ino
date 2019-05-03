@@ -22,7 +22,7 @@ int servopin = 3;                     //servo pin
 int stepspeed = 40;                                       //speed that the stepper operates
 int wheeldelay = 1500;                                    //time after the wheel rotates that the code is delayed
 float sense[3];                                           //initialize an array to store the 3 values put out by the TCS
-int servopos[] = {50, 75, 100, 125};                      //locations of the bins in degrees
+int servopos[] = {40, 60, 80, 100};                     //locations of the bins in degrees
 String color = "none";                                    //initialize color to none to use as placeholder
 int ballsTotal = 17;                                      //total balls to be sorted (used to make sure no balls get left in hopper/device)  
 int ballsToSort = 12;                                     //this counts how many balls need to be processed, should be 0 when all balls are done
@@ -202,11 +202,8 @@ void loop() {
   }
 }
 
-<<<<<<< HEAD
-=======
 //FUNCTIONS USED IN CODE ABOVE 
 
->>>>>>> parent of b5b4068... minor changes to CAD and code
 //function to write the color from a list to a RGBLED
 void colorWrite(int list[]){    //takes a list of 3 values to write to LED
   analogWrite(red, list[0]);
@@ -226,11 +223,11 @@ void colorBlink(int list[], int n){   //takes a list of 3 values to write to LED
 }
 
 //function to check the color of a ball
-int checkColor(int colorList[], float sensedList[]){    //takes a list of what colors should be sensed and a list of what colors are sensed
-  int sum = 0;                                          ///for each of 3 colors
-    if( abs(colorList[i]-sensedList[i]) < range ) {     //if the "should be" color is within range of the "sensed" color
-        sum++;                                       initialize a sum to 0    
-  for(int i=0; i<3; i++){                               /   //add one to the sum
+int checkColor(int colorList[], float sensedList[]){        //takes a list of what colors should be sensed and a list of what colors are sensed
+  int sum = 0;                                              //initialize a sum to 0   
+  for(int i=0; i<3; i++){                                   //for each of 3 colors
+        if( abs(colorList[i]-sensedList[i]) < range ) {     //if the "should be" color is within range of the "sensed" color
+        sum++;                                              //add one to the sum
     }
   }
   if(sum == 3){                                         //if the sum is 3 (true for all 3 of RGB)
