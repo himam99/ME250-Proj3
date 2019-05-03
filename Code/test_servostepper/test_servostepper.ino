@@ -7,7 +7,7 @@ Stepper stpr(512, A0, A2, A1, A3); //in the order in1, 3, 2, 4
 int servopin = 3;
 int n = 0;
 
-int servopos[] = {40, 60, 80, 100};                      //locations of the bins in degrees
+int servopos[] = {40, 65, 80, 100};                      //locations of the bins in degrees
 
 void setup() {
   Serial.begin(9600);
@@ -19,6 +19,7 @@ void setup() {
 
 void loop() {
 
+  n=0;
   
   while(n<4){
     
@@ -32,7 +33,7 @@ void loop() {
     n++;
   }
 
-  n=0;
+  //servo.write(servopos[0]);
   
 
 
