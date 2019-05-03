@@ -136,7 +136,7 @@ This section documents how the design was created from the original concept. The
 
 \subsubsection{Prototype}
 
-This design was the first attempt at recreating the idea from the drawing in CAD. The device is made mainly using 1/8" plywood, except for the stepper horn which is 3D printed. The top plate of the device has a large hole which can hold the outside diameter of the hopper, followed by a plate with a small hole that does not let the hopper tube pass through but lets the balls through. Below that, a stepper motor rotates a plate with 3 holes. This middle plate is close enough to the hole that a ball cannot drop down from the upper plate unless the hole in the wheel is aligned with the hole in the upper plate. The wheel then rotates the ball along the middle plate until is next to the color sensor, which detects the color of the ball and sends it to the Arduino. A servo motor attached to the ramp then rotates so that the ramp points towards the correct bin. The wheel rotates again, which simultaneously loads in another ball, rotates the previously loaded ball to the scanner, and rotates the just-scanned ball to a hole in the middle plate where it will fall onto the ramp and roll into the correct bin. The lower plate has a hole cut to house the servo, as well as a small round cut in the side of it so that the ramp has a wider range of mobility before it hits the plate.
+This design was the first attempt at recreating the idea from the drawing in CAD. The device is made mainly using 1/8" plywood, except for the stepper horn which is 3D printed. The top plate of the device has a large hole which can hold the outside diameter of the hopper, followed by a plate with a small hole that does not let the hopper tube pass through but lets the balls through. Below that, a stepper motor rotates a plate with 3 holes. This middle plate is close enough to the hole that a ball cannot drop down from the upper plate unless the hole in the wheel is aligned with the hole in the upper plate. The wheel then rotates the ball along the middle plate until is next to the color sensor, which detects the color of the ball and sends it to the Arduino. Next, a servo motor attached to the ramp via a ramp bracket rotates so that the ramp points towards the correct bin. The wheel rotates again, which simultaneously loads in another ball, rotates the previously loaded ball to the scanner, and rotates the just-scanned ball to a hole in the middle plate where it will fall onto the ramp and roll into the correct bin. The lower plate has a hole cut to house the servo, as well as a small round cut in the side of it so that the ramp has a wider range of mobility before it hits the plate. The pieces were mostly to be glued together to avoid the need for lots of fasteners such as screws and bolts. Overall the prototype design was a first draft at realizing the initial drawing and helped us conceptualize how our design would work before we built it.
 
 \begin{center}
     \includegraphics[width=\textwidth]{assembly_OLD.png}\\
@@ -145,7 +145,7 @@ This design was the first attempt at recreating the idea from the drawing in CAD
 
 \subsubsection{``In Progress" Redesign}
 
-This design was created after the initial design when the group moved from the designing phase to the building phase. The first main change was that all the wood pieces are now made of 1/4"
+This design was created after the initial design when the group moved from the designing phase to the building phase. The most notable change was that all the wood pieces are now made of 1/4" wood instead of 1/8" like the original design, and the wheel is made of 1/8" laser-cut acrylic instead of hand-machined plywood. The wood was changed to 1/4" plywood both because the group determined 1/8" may not be sturdy enough, and because the lab did not have a large enough supply of 1/8". The wheel was switched to laser-cut acrylic since the group determined it would be too time consuming to accurately cut a circular wheel by hand. Overall, the design remained mostly the same, with only some changes made to better reflect the work environment that the group had access to.
 
 \begin{center}
     \includegraphics[width=\textwidth]{assembly_IP.png}\\
@@ -154,7 +154,9 @@ This design was created after the initial design when the group moved from the d
 
 \subsubsection{``As Built" Design}
 
+The ``As Built'' design is notably different from the previous iterations. The most drastic change is that the pieces are now attached using screws instead of glue, which required some mild redesigning. The materials used were primarily OSB and MDF, which both would not hold well if a screw was drilled into the side. To fix this problem, supports were created out of 2x4s, which then had holes drilled into them to attach the pieces together at right angles. To space the section with the wheel properly, the upper plate was moved to be flat against the same support beams used for the top plate. Other small changes included the ramp material changing from plywood to cardboard since it was easier to create and weighed less, causing less strain on the servo. The color sensor was also relocated from the side wall to above the wheel so that it could get a more accurate reading as well as being more easily mounted and managed. The hole in the upper plate was widened to make room for a PVC coupler that could hold the hopper, as well as featuring a diversion ramp that ensured the ball was in the correct spot.
 
+Dimensioned CAD drawings are available for this part below since it was the final iteration. For detailed drawings of the other components, see Appendix C.
 
 \begin{center}
     \includegraphics[width=\textwidth]{assembly_AB.png}\\
@@ -163,6 +165,29 @@ This design was created after the initial design when the group moved from the d
 
 \subsection{Electrical Design}
 \subsubsection{Hardware}
+
+    The following session will describe the hardware used for the project. The table 5.3.1.1 shows the quantity of hardware and the description of each hardware and figure 5.3.1.2 shows a circuit diagram of the hardware.
+    
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+       \textbf{\#}  & \textbf{Name} & \textbf{Qty} & \textbf{Description}  \\
+       \hline
+        1 & Arduino & 1 & Controls the device\\
+        2 & Small breadboard & 2 & Connect hardware\\
+        3 &  RGB LED & 1 & Shows signals from Arduino\\
+        4 & Stepper Motor & 1 & Rotates wheel \\
+        5 & Servo Motor & 1 & Rotates ramp \\
+        6 & Resistor & 1 & 10k$\Omega$, protects LED from blowing out\\ 
+        7 & Color Sensor & 1& Reads color value \\
+        8 & Power Supply & 1 & Supplies power to motors\\
+        \hline
+    \end{tabular}
+    
+    \small{\textbf{Table 5.3.1.1} - Circuit Materials}\\~\\
+    
+    \end{center}
+
 \subsubsection{Software}
 
 \subsection{Cost}
@@ -171,9 +196,6 @@ This design was created after the initial design when the group moved from the d
 
 \newpage
 \section{Device Testing}
-
-\newpage
-\section{Data Presentation}
 
 \newpage
 \section{Conclusions}
@@ -201,5 +223,14 @@ This design was created after the initial design when the group moved from the d
 
 \subsection{GitHub}
     Code for this project was maintained in a GitHub repository by Hammad Imam. The main Arduino code used in this project can be seen in more detail \href{https://github.com/himam99/ME250-Proj3/blob/master/Code/me250_proj3_code/me250_proj3_code.ino}{here.} Other code used in the development and testing of this project can be found \href{https://github.com/himam99/ME250-Proj3/tree/master/Code}{here.} Any questions about the GitHub repository can be sent to himam4@uic.edu.
+    
+\section{CAD}
+\subsection{About}
+
+All CAD work for this project was done in SolidWorks.
+
+\subsection{Additional Files}
+
+All drawings for the ``As Built" design are given above. The original part and assembly files, as well as the files for previous iterations of the design, can be seen \href{https://github.com/himam99/ME250-Proj3/tree/master/CAD}{here.}
 
 \end{document}
