@@ -22,11 +22,11 @@ int servopin = 3;                     //servo pin
 int stepspeed = 40;                                       //speed that the stepper operates
 int wheeldelay = 1500;                                    //time after the wheel rotates that the code is delayed
 float sense[3];                                           //initialize an array to store the 3 values put out by the TCS
-int servopos[] = {40, 60, 80, 100};                     //locations of the bins in degrees
+int servopos[] = {40, 60, 80, 100};                       //locations of the bins in degrees
 String color = "none";                                    //initialize color to none to use as placeholder
 int ballsTotal = 17;                                      //total balls to be sorted (used to make sure no balls get left in hopper/device)  
 int ballsToSort = 12;                                     //this counts how many balls need to be processed, should be 0 when all balls are done
-int range = 5;                                           //range from "centerpoint" defined in struct that a ball's RGB can be
+int range = 5;                                            //range from "centerpoint" defined in struct that a ball's RGB can be
 
 //initialize colors
 //make it easier for status updates using one of these 'default' colors
